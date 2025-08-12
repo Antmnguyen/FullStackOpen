@@ -1,0 +1,40 @@
+html {
+  /* px means "pixels". The base font size is now 10 pixels high */
+  font-size: 10px;
+  /* Replace PLACEHOLDER with the font-family property value you got from Google Fonts */
+  font-family: "Oswald", sans-serif;
+}
+
+h1 {
+  font-size: 60px;
+  text-align: center;
+}
+p,
+li {
+  font-size: 16px;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+img
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;  /* to center image */
+}
+html {
+  background-color: #762d18;
+}
+body {
+  width: 600px;
+  margin: 0 auto;
+  background-color: #bb2534;
+  padding: 0 20px 20px 20px;
+  border: 5px solid black;
+}
+img {
+  display: block;
+  max-width: 100%;   /* makes sure image doesn't overflow the body */
+  width: 300px;      /* your desired smaller width */
+  margin: 20px auto; /* centers image and adds vertical spacing */
+}
