@@ -1,11 +1,7 @@
 import { useState } from 'react'
-
-const printPerson = (persons) => { //takes in a persons object
-  return (
-    <p key= {persons.id}> {persons.name}: {persons.number}</p>
-  )
-}
-
+import printPerson from './components/printPerson'
+import AddPersonForm from './components/AddPersonForm'
+import FilterForm from './components/FilterForm.jsx'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -67,38 +63,30 @@ const handleSearch = (event) => {
     console.log(event.target.value)
     setNewNumber(event.target.value)
   }
+
+
   return ( 
     <div> 
       <h2>Phonebook</h2>
-      <form> 
-        <div>
-          filter shown with <input value = {nameSearch} // will store nameToSearch
-          onChange = {handleSearch}
-          /> 
-        </div> 
 
-      </form>
+      <FilterForm
+        nameSearch = {nameSearch}
+        handleSearch = {handleSearch}
+        />
       <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} //saves everything in newNote
-          onChange={handleNameChange} //this is what saves it into new note
-          />
-          <p>
-          Number: <input value={newNumber} //saves everything in newNote
-          onChange={handleNumberChange} //this is what saves it into new note
-          />
-          </p>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      
+      <AddPersonForm  //form to ad a person in Addperson
+        addPerson = {addPerson}
+        newName = {newName}
+        handleNameChange = {handleNameChange}
+        newNumber = {newNumber}
+        handleNumberChange = {handleNumberChange}
+      />
+
       <h2>Numbers</h2>
 
       {personsToShow.map(printPerson)}
     </div>
   )
 }
-
 export default App
