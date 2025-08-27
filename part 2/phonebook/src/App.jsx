@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import printPerson from './components/printPerson'
 import AddPersonForm from './components/AddPersonForm'
 import FilterForm from './components/FilterForm.jsx'
+
+
+
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -14,6 +18,21 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('') //track number input
   const [showAll, setShowAll] = useState(true)
   const [nameSearch, setNameSearch] = useState('')
+
+
+
+useEffect(() => {
+  console.log('effect')
+
+  const eventHandler = response => {
+    console.log('promise fulfilled')
+    setPersons(response.data)  //FIX THIS HERE
+  }
+
+  const promise = axios.get('http://localhost:3001/persons')
+  promise.then(eventHandler)
+}, [])
+
 
   const search = (person, nameSearch) => {
   // convert both to lowercase for case-insensitive search
