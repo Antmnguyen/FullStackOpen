@@ -39,19 +39,37 @@ useEffect(() => {
 
   const addPerson = (event) => {
       event.preventDefault()
+      /*
       const nameExists = persons.some(
         (person) => person.name.toLowerCase() === newName.toLowerCase()
       ); //checks if name already exists boolean value from persons.some
-      
-      if (nameExists) {
-        alert(`${newName} is already in the phonebook`); //sends alert
-        return; // stop adding
-      }
+      */
+     
 
       const personObject = {
         name: newName,
         number: newNumber,
         //id: String(persons.length + 1),
+      }
+      const existingPerson = persons.find(
+        person => person.name.toLowerCase() === newName.toLowerCase()
+      )
+      if (existingPerson) { //checks if person alr exists and then asks if you wanna change their number
+      const confirmUpdate = window.confirm(
+        `${newName} is already in the phonebook. Do you want to update the number?`
+      )
+      if (confirmUpdate)
+      {
+        personService.update(existingPerson.id, personObject) 
+        .then(newPerson => {setPersons(persons.map(p =>
+        p.id !== newPerson.id ? p : newPerson
+        )) //replaces old person with new person number
+        setNewName('')
+        setNewNumber('')
+      })
+          
+          return; // stop adding
+        }
       }
       
       personService.create(personObject)
@@ -72,11 +90,11 @@ useEffect(() => {
 
 
 
-const handleDelete = (id) => {
-  if (window.confirm('Are you sure you want to delete this person?')) {
+const handleDelete = (id) => { //handles delete event handler which will pass into a button later
+  if (window.confirm('Are you sure you want to delete this person?')) {  //if confirmed you continue
     personService.destroy(id).then(() => {
-      setPersons(prevPersons => prevPersons.filter(person => person.id !== id))
-    })
+      setPersons(prevPersons => prevPersons.filter(person => person.id !== id))  
+    }) //simple person service destroys that id in the json file. set persons then removes that person from the person array
   }
 }
 
