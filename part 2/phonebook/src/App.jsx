@@ -72,8 +72,13 @@ useEffect(() => {
 
 
 
-
-
+const handleDelete = (id) => {
+  if (window.confirm('Are you sure you want to delete this person?')) {
+    personService.destroy(id).then(() => {
+      setPersons(prevPersons => prevPersons.filter(person => person.id !== id))
+    })
+  }
+}
 
 const handleSearch = (event) => {
   const query = event.target.value;
@@ -116,7 +121,7 @@ const handleSearch = (event) => {
 
       <h2>Numbers</h2>
 
-      {personsToShow.map(printPerson)}
+      {personsToShow.map(person => printPerson(person, handleDelete))} 
     </div>
   )
 }
