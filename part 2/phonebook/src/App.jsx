@@ -3,17 +3,12 @@ import axios from 'axios'
 import printPerson from './components/printPerson'
 import AddPersonForm from './components/AddPersonForm'
 import FilterForm from './components/FilterForm.jsx'
-
+import personService from './services/persons'
 
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', 
-      number:0,
-      id:0,
-    }
-  ]) 
+  const [persons, setPersons] = useState([])  //initally empty persons array
   const [newName, setNewName] = useState('') //to track input
   const [newNumber, setNewNumber] = useState('') //track number input
   const [showAll, setShowAll] = useState(true)
@@ -22,8 +17,7 @@ const App = () => {
 
 
 useEffect(() => {
-  console.log('effect')
-
+  console.log('effect') 
   const eventHandler = response => {
     console.log('promise fulfilled')
     setPersons(response.data)  //FIX THIS HERE
@@ -32,6 +26,8 @@ useEffect(() => {
   const promise = axios.get('http://localhost:3001/persons')
   promise.then(eventHandler)
 }, [])
+
+
 
 
   const search = (person, nameSearch) => {
@@ -55,13 +51,29 @@ useEffect(() => {
       const personObject = {
         name: newName,
         number: newNumber,
-        id: String(persons.length + 1),
+        //id: String(persons.length + 1),
       }
       
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      personService.create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson)) // append single object
+        setNewName('')
+        setNewNumber('')
+      })
+      /*
+      personService  //creates a person object in the person json an
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')})
+      */
   }
+
+
+
+
+
 
 const handleSearch = (event) => {
   const query = event.target.value;
@@ -75,8 +87,8 @@ const handleSearch = (event) => {
 };
 
  const handleNameChange = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
+    console.log(event.target.value) 
+    setNewName(event.target.value) //changes name to new name recieves event from form submission
   }
   const handleNumberChange = (event) => {
     console.log(event.target.value)
