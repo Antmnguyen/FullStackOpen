@@ -4,6 +4,7 @@ import printPerson from './components/printPerson'
 import AddPersonForm from './components/AddPersonForm'
 import FilterForm from './components/FilterForm.jsx'
 import personService from './services/persons'
+import Notification from './components/Notification.jsx'
 
 
 
@@ -13,23 +14,53 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('') //track number input
   const [showAll, setShowAll] = useState(true)
   const [nameSearch, setNameSearch] = useState('')
+  const [notification, setNotification] = useState('Notification.')
 
 
 
-useEffect(() => {
-  console.log('effect') 
-  const eventHandler = response => {
-    console.log('promise fulfilled')
-    setPersons(response.data)  //FIX THIS HERE
-  }
+    const showNotification = (msg) => {
+    setMessage(msg);
 
-  const promise = axios.get('http://localhost:3001/persons')
-  promise.then(eventHandler)
-}, [])
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+  useEffect(() => {
+    console.log('effect');
+
+    const eventHandler = response => {
+      console.log('promise fulfilled');
+      setPersons(response.data);
+
+      // Show a notification for 3 seconds
+      setNotification('Data loaded successfully!');
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+
+      // Clean up in case the effect runs again before 3s
+      return () => clearTimeout(timer);
+    };
+
+    const promise = axios.get('http://localhost:3001/persons');
+    promise.then(eventHandler);
+
+  }, []); // empty array: runs only once on mount
 
 
 
+   // Clear notification automatically after 3 seconds
+  useEffect(() => {
+    if (notification === null) return;
 
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+
+    return () => clearTimeout(timer); // cleanup if notification changes
+  }, [notification]); // runs whenever notification changes
+  
   const search = (person, nameSearch) => {
   // convert both to lowercase for case-insensitive search
   return person.name.toLowerCase().includes(nameSearch.toLowerCase());
@@ -66,6 +97,7 @@ useEffect(() => {
         )) //replaces old person with new person number
         setNewName('')
         setNewNumber('')
+        setNotification('Updated ' + newPerson.name + 's number' )
       })
           
           return; // stop adding
@@ -77,6 +109,7 @@ useEffect(() => {
         setPersons(persons.concat(newPerson)) // append single object
         setNewName('')
         setNewNumber('')
+        setNotification('Added ' + newPerson.name)
       })
       /*
       personService  //creates a person object in the person json an
@@ -122,7 +155,7 @@ const handleSearch = (event) => {
   return ( 
     <div> 
       <h2>Phonebook</h2>
-
+      <Notification message = {notification}></Notification>
       <FilterForm
         nameSearch = {nameSearch}
         handleSearch = {handleSearch}

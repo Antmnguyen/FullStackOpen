@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
       "name": "bob the builer",
       "number": "234555",
       "id": "1dab"
@@ -24,6 +19,16 @@
       "id": "d722",
       "name": "dan abrmamov",
       "number": "12345"
+    },
+    {
+      "name": "Anthony Nguyen",
+      "number": "123456",
+      "id": "20bc"
+    },
+    {
+      "id": "0711",
+      "name": "bob the builder",
+      "number": "1235"
     }
   ]
 }
