@@ -1,5 +1,12 @@
 const express = require('express')
 const app = express()
+var morgan = require('morgan')
+
+app.use(express.json())
+
+//app.use(morgan('tiny'))
+
+
 
 let persons = [
     { 
@@ -24,7 +31,14 @@ let persons = [
     }
 ]
 
-app.get('/info', (request, response) => {
+morgan.token('body', (req, res) => {
+  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
+
+app.get('/info',  (request, response) => {
   const time = new Date()
   const count =  persons.length
     response.send(`
@@ -42,19 +56,19 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-app.delete('/api/persons/:id')
-{
+app.delete('/api/persons/:id', (request, response) => {
+
     const id = request.params.id
     persons = persons.filter(persons => persons.id !== id)
-}
+})
 
 const generateId = () => {
   const id = String(Math.floor(Math.random() * 101)) // 0 to 100 inclusive
   return id
 }
 
-app.post('/api/persons/:id')
-{
+app.post('/api/persons', (request, response) => {
+
     const body = request.body //the object sent via post request
 
     if(!body.name)
@@ -83,7 +97,7 @@ app.post('/api/persons/:id')
     }
     persons = persons.concat(person) //adds it to array
     response.json(person) //responds with a json to check
-}
+})
     
 
 app.get('/api/persons/:id', (request, response) => {
