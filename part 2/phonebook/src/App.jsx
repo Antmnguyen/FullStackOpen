@@ -43,7 +43,9 @@ const App = () => {
       return () => clearTimeout(timer);
     };
 
-    const promise = axios.get('http://localhost:3001/persons');
+    //promiseService.getAll(eventHandler);
+
+    const promise = axios.get('http://localhost:3001/api/persons');
     promise.then(eventHandler);
 
   }, []); // empty array: runs only once on mount
